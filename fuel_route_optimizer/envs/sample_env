@@ -1,0 +1,8 @@
+SECRET_KEY=django-insecure
+DEBUG=True
+ALLOWED_HOSTS=127.0.0.1,localhost
+DB_NAME=fuel_route_optimizer
+DB_USER=postgres
+DB_PASSWORD=your_postgres_password
+DB_HOST=localhost
+DB_PORT=5432
