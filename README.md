@@ -63,7 +63,7 @@ The application is built with:
 
 - Python
 - Django + Django REST Framework
-- PostgreSQL + PostGIS
+- PostgreSQL
 - Docker / Docker Compose
 - Shapely, PyProj
 - External geocoding API
@@ -451,7 +451,7 @@ The optimizer validates that:
 
 1. **Route-relative station positions.** Stations are selected using `distance_along_route`, not raw lat/long distance, since the vehicle travels the route in one direction.
 2. **Configurable vehicle assumptions.** Vehicle properties live in `routing/constants.py`, making it easy to support a different vehicle profile later.
-3. **Geospatial processing.** PostGIS, Shapely, and PyProj handle geographic data and route geometry.
+3. **Geospatial processing.** Shapely, and PyProj handle geographic data and route geometry.
 4. **Cached routes.** Avoids repeating expensive route calculation and optimization for identical requests.
 5. **Price fingerprinting.** The cache tracks the state of station prices so a route is recalculated when relevant prices change.
 6. **`Decimal` for money.** Fuel prices and costs use Python's `Decimal` rather than binary floating point, where monetary precision matters.
@@ -521,7 +521,7 @@ OK
 docker compose -f fuel_route_optimizer/docker-compose.yml up --build
 ```
 
-The API is available at `http://localhost:8000/`. The Docker setup includes the Django app, PostgreSQL, and PostGIS. The database is exposed on the host at port `5434`.
+The API is available at `http://localhost:8000/`. The Docker setup includes the Django app, PostgreSQL. The database is exposed on the host at port `5434`.
 
 **Import fuel stations:**
 
