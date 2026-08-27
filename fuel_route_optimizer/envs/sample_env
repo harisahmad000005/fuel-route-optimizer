@@ -6,3 +6,7 @@ DB_USER=postgres
 DB_PASSWORD=your_postgres_password
 DB_HOST=localhost
 DB_PORT=5432
+NOMINATIM_URL=https://nominatim.openstreetmap.org/search
+CENSUS_GEOCODER_URL=https://geocoding.geo.census.gov/geocoder/locations/onelineaddress
+OSRM_URL=https://router.project-osrm.org/route/v1/driving
+GEOCODER_USER_AGENT=fuel-route-optimizer/1.0 (contact: your-email@example.com)

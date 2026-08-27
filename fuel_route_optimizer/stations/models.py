@@ -1,12 +1,14 @@
 from django.db import models
 
+# from django.contrib.gis.db import models as gis_models
 from stations.mixins import TimeStampedModel
 
 
 class GeocodeStatus(models.TextChoices):
-    PENDING = "pending"
-    SUCCESS = "success"
-    FAILED = "failed"
+    PENDING = "pending", "Pending"
+    SUCCESS = "success", "Success"
+    FAILED = "failed", "Failed"
+
 
 class State(models.TextChoices):
     AL = "AL", "Alabama"
@@ -70,41 +72,17 @@ class State(models.TextChoices):
     WY = "WY", "Wyoming"
 
 
-class City(TimeStampedModel):
-    name = models.CharField(max_length=100)
-    state = models.CharField(max_length=2, choices=State.choices, db_index=True)
-    latitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    longitude = models.DecimalField(max_digits=9, decimal_places=6, null=True, blank=True)
-    geocode_status = models.CharField(
-        max_length=10,
-        choices=GeocodeStatus.choices, 
-        default=GeocodeStatus.PENDING,
-    )
-
-    class Meta:
-        unique_together = ("name", "state") 
-        indexes = [models.Index(fields=["name", "state"])]
-
-    def __str__(self):
-        return f"{self.name}, {self.state}"
-
-
 class FuelStation(TimeStampedModel):
-    opis_id = models.IntegerField(unique=True)
+    opis_id = models.IntegerField(unique=True, db_index=True)
     name = models.CharField(max_length=255)
-    address = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-
-    )
-    city = models.ForeignKey(
-        City,
-        on_delete=models.PROTECT,
-        related_name="stations",
+    address = models.CharField(max_length=255, blank=True, null=True)
+    city = models.CharField(max_length=100)
+    state = models.CharField(
+        max_length=2,
+        choices=State.choices,
+        db_index=True,
     )
     rack_id = models.IntegerField(null=True, blank=True)
-    price = models.DecimalField(max_digits=6, decimal_places=4)
 
     latitude = models.DecimalField(
         max_digits=9,
@@ -118,6 +96,7 @@ class FuelStation(TimeStampedModel):
         null=True,
         blank=True,
     )
+
     geocode_status = models.CharField(
         max_length=10,
         choices=GeocodeStatus.choices,
@@ -126,7 +105,29 @@ class FuelStation(TimeStampedModel):
     )
     geocoded_at = models.DateTimeField(null=True, blank=True)
 
+    def __str__(self):
+        return f"{self.name} - {self.city}, {self.state}"
+
+
+class FuelPrice(TimeStampedModel):
+    station = models.ForeignKey(
+        FuelStation,
+        on_delete=models.CASCADE,
+        related_name="prices",
+    )
+    price = models.DecimalField(
+        max_digits=6,
+        decimal_places=4,
+    )
+    observed_at = models.DateTimeField(db_index=True)
+
     class Meta:
         indexes = [
-            models.Index(fields=["latitude", "longitude"]),
+            models.Index(
+                fields=["station", "-observed_at"],
+                name="station_latest_price_idx",
+            ),
         ]
+
+    def __str__(self):
+        return f"{self.station} - ${self.price}"

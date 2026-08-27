@@ -141,9 +141,22 @@ MAILERS = {
     },
 }
 
-GEOCODER_USER_AGENT = os.getenv(
-    "GEOCODER_USER_AGENT",
-    "fuel-route-optimizer/1.0 (contact: email@example.com)",
+NOMINATIM_URL = os.getenv(
+    "NOMINATIM_URL",
+    "https://nominatim.openstreetmap.org/search",
 )
 
-NOMINATIM_URL = os.getenv("NOMINATIM_URL", "https://nominatim.openstreetmap.org/search")
+GEOCODER_USER_AGENT = os.getenv(
+    "GEOCODER_USER_AGENT",
+    "fuel-route-optimizer/1.0 (contact: your-email@example.com)",
+)
+
+CENSUS_GEOCODER_URL = os.getenv(
+    "CENSUS_GEOCODER_URL",
+    "https://geocoding.geo.census.gov/geocoder/locations/onelineaddress",
+)
+
+OSRM_URL = os.getenv(
+    "OSRM_URL",
+    "https://router.project-osrm.org/route/v1/driving",
+)
